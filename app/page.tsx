@@ -30,6 +30,22 @@ export default function Home() {
   const [showRelationshipQuestion, setShowRelationshipQuestion] = useState(false);
   const [showContinueMessage, setShowContinueMessage] = useState(false);
 
+  // MusicCard'ı ana içerikten bağımsız olarak render et
+  const musicCard = (
+    <>
+      {step >= 2 && (
+        <div className="fixed top-4 right-4 z-50">
+          <MusicCard 
+            src="/hooverphonic.mp3"
+            title="Mad About You"
+            artist="Hooverphonic"
+            mainColor="#10b981"
+          />
+        </div>
+      )}
+    </>
+  );
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       audioRef.current = new Audio('/rain.mp3');
@@ -291,7 +307,7 @@ export default function Home() {
         setShowContinueMessage(true);
       } else {
         setShowRelationshipQuestion(false);
-        setStep(2); // "Yeniden ben evet" mesajına geç
+        setStep(2);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -305,170 +321,291 @@ export default function Home() {
 
   if (showContinueMessage) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center gap-6"
-      >
-        <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
-          Olsun sen gene de bir bak
-        </h2>
-        <button
-          onClick={() => {
-            setShowContinueMessage(false);
-            setShowRelationshipQuestion(false);
-            setStep(2); // "Yeniden ben evet" mesajına geç
-          }}
-          className="bg-white text-black rounded-full px-4 py-2"
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-6"
         >
-          Devam Et
-        </button>
-      </motion.div>
+          <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
+            Olsun sen gene de bir bak
+          </h2>
+          <button
+            onClick={() => {
+              setShowContinueMessage(false);
+              setShowRelationshipQuestion(false);
+              setStep(2);
+            }}
+            className="bg-white text-black rounded-full px-4 py-2"
+          >
+            Devam Et
+          </button>
+        </motion.div>
+      </>
     );
   }
 
   if (isComplete) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center gap-6"
-      >
-        <div className="text-3xl md:text-7xl font-bold text-white text-center">
-          {showDoubleCheck ? 
-            "Üzgünüm inandırıcı gelmeyecek biliyorum fakat seni aklımdan bir an olsun çıkaramıyorum... Her şey için teşekkürler son kez" :
-            "O zaman cumartesi malavita? :)"}
-        </div>
-        {!showDoubleCheck && (
-          <>
-            <div className="text-xl text-white text-center mt-8">
-              Siteyi yaparken hızımı alamadım chat kısmı da yaptım, şu an eğer ben de aktifsem bana yazabilirsin
-            </div>
-            <button
-              onClick={() => window.location.href = '/chat'}
-              className="bg-white text-black rounded-full px-4 py-2 mt-4"
-            >
-              Devam Et
-            </button>
-          </>
-        )}
-      </motion.div>
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <div className="text-3xl md:text-7xl font-bold text-white text-center">
+            {showDoubleCheck ? 
+              "Üzgünüm inandırıcı gelmeyecek biliyorum fakat seni aklımdan bir an olsun çıkaramıyorum... Her şey için teşekkürler son kez" :
+              "O zaman cumartesi malavita? :)"}
+          </div>
+          {!showDoubleCheck && (
+            <>
+              <div className="text-xl text-white text-center mt-8">
+                Siteyi yaparken hızımı alamadım chat kısmı da yaptım, şu an eğer ben de aktifsem bana yazabilirsin
+              </div>
+              <button
+                onClick={() => window.location.href = '/chat'}
+                className="bg-white text-black rounded-full px-4 py-2 mt-4"
+              >
+                Devam Et
+              </button>
+            </>
+          )}
+        </motion.div>
+      </>
     );
   }
 
   if (showCustomDate) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center min-h-screen p-4 text-white"
-      >
-        <div className="text-center space-y-6">
-          <h2 className="text-2xl">gün malavite? :)</h2>
-          <input
-            type="date"
-            value={customDate}
-            onChange={(e) => setCustomDate(e.target.value)}
-            className="px-4 py-2 rounded bg-gray-800 text-white"
-          />
-          <button
-            onClick={handleCustomDateSubmit}
-            className="px-6 py-2 rounded-full bg-white text-black mt-4 block mx-auto"
-          >
-            Devam Et
-          </button>
-        </div>
-      </motion.div>
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center justify-center min-h-screen p-4 text-white"
+        >
+          <div className="text-center space-y-6">
+            <h2 className="text-2xl">gün malavite? :)</h2>
+            <input
+              type="date"
+              value={customDate}
+              onChange={(e) => setCustomDate(e.target.value)}
+              className="px-4 py-2 rounded bg-gray-800 text-white"
+            />
+            <button
+              onClick={handleCustomDateSubmit}
+              className="px-6 py-2 rounded-full bg-white text-black mt-4 block mx-auto"
+            >
+              Devam Et
+            </button>
+          </div>
+        </motion.div>
+      </>
     );
   }
 
   if (showDateQuestion) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center gap-6"
-      >
-        <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
-          Cumartesi?
-        </h2>
-        <div className="flex gap-4">
-          <button
-            onClick={() => handleAnswer('evet')}
-            className="bg-white text-black rounded-full px-4 py-2"
-          >
-            Evet
-          </button>
-          <button
-            onClick={() => handleAnswer('hayır')}
-            className="bg-white text-black rounded-full px-4 py-2"
-          >
-            Hayır
-          </button>
-        </div>
-      </motion.div>
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
+            Cumartesi?
+          </h2>
+          <div className="flex gap-4">
+            <button
+              onClick={() => handleAnswer('evet')}
+              className="bg-white text-black rounded-full px-4 py-2"
+            >
+              Evet
+            </button>
+            <button
+              onClick={() => handleAnswer('hayır')}
+              className="bg-white text-black rounded-full px-4 py-2"
+            >
+              Hayır
+            </button>
+          </div>
+        </motion.div>
+      </>
     );
   }
 
   if (showDoubleCheck) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center gap-6"
-      >
-        <div className="text-6xl mb-4">😢</div>
-        <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
-          Emin misin?
-        </h2>
-        <div className="flex gap-4">
-          <button
-            onClick={() => handleAnswer('evet')}
-            className="bg-white text-black rounded-full px-4 py-2"
-          >
-            Evet
-          </button>
-          <button
-            onClick={() => handleAnswer('hayır')}
-            className="bg-white text-black rounded-full px-4 py-2"
-          >
-            Hayır
-          </button>
-        </div>
-      </motion.div>
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <div className="text-6xl mb-4">😢</div>
+          <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
+            Emin misin?
+          </h2>
+          <div className="flex gap-4">
+            <button
+              onClick={() => handleAnswer('evet')}
+              className="bg-white text-black rounded-full px-4 py-2"
+            >
+              Evet
+            </button>
+            <button
+              onClick={() => handleAnswer('hayır')}
+              className="bg-white text-black rounded-full px-4 py-2"
+            >
+              Hayır
+            </button>
+          </div>
+        </motion.div>
+      </>
     );
   }
 
   if (showCoffeeQuestion) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center gap-6"
-      >
-        <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
-          Benimle bir kahve içer misin?
-        </h2>
-        <div className="flex gap-4">
-          <button
-            onClick={() => handleAnswer('evet')}
-            className="bg-white text-black rounded-full px-4 py-2"
-          >
-            Evet
-          </button>
-          <button
-            onClick={() => handleAnswer('hayır')}
-            className="bg-white text-black rounded-full px-4 py-2"
-          >
-            Hayır
-          </button>
-        </div>
-      </motion.div>
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
+            Benimle bir kahve içer misin?
+          </h2>
+          <div className="flex gap-4">
+            <button
+              onClick={() => handleAnswer('evet')}
+              className="bg-white text-black rounded-full px-4 py-2"
+            >
+              Evet
+            </button>
+            <button
+              onClick={() => handleAnswer('hayır')}
+              className="bg-white text-black rounded-full px-4 py-2"
+            >
+              Hayır
+            </button>
+          </div>
+        </motion.div>
+      </>
     );
   }
 
   if (showAfterAnger) {
     return (
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0.0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.3,
+            duration: 0.8,
+            ease: "easeInOut",
+          }}
+          className="relative flex flex-col gap-4 items-center justify-center px-4"
+        >
+          <div className="text-3xl md:text-7xl font-bold text-white text-center">
+            {afterAngerMessages[afterAngerStep]}
+          </div>
+          <button 
+            onClick={handleAfterAngerNext}
+            className="bg-white text-black rounded-full w-fit px-4 py-2 mt-4"
+          >
+            Devam Et
+          </button>
+        </motion.div>
+      </>
+    );
+  }
+
+  if (showAngerLevel) {
+    return (
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
+            Bana ne kadar kızgınsın?
+          </h2>
+          <div className="flex items-center gap-4">
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value={anger}
+              onChange={(e) => setAnger(Number(e.target.value))}
+              className="w-64 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+            />
+            <span className="text-xl font-bold text-white">{anger}</span>
+          </div>
+          {anger >= 6 && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="text-6xl"
+            >
+              😢
+            </motion.div>
+          )}
+          <button
+            onClick={handleAngerSubmit}
+            className="bg-white text-black rounded-full w-fit px-4 py-2 mt-4"
+          >
+            Devam Et
+          </button>
+        </motion.div>
+      </>
+    );
+  }
+
+  if (showRelationshipQuestion) {
+    return (
+      <>
+        {musicCard}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
+          Her şeyden önce önemli bir soru konuştuğun biri var mı?
+          </h2>
+          <div className="flex gap-4">
+            <button
+              onClick={() => handleRelationshipAnswer('evet')}
+              className="bg-white text-black rounded-full px-4 py-2"
+            >
+              Evet
+            </button>
+            <button
+              onClick={() => handleRelationshipAnswer('hayır')}
+              className="bg-white text-black rounded-full px-4 py-2"
+            >
+              Hayır
+            </button>
+          </div>
+        </motion.div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {musicCard}
       <motion.div
         initial={{ opacity: 0.0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -480,117 +617,15 @@ export default function Home() {
         className="relative flex flex-col gap-4 items-center justify-center px-4"
       >
         <div className="text-3xl md:text-7xl font-bold text-white text-center">
-          {afterAngerMessages[afterAngerStep]}
+          {messages[step]}
         </div>
         <button 
-          onClick={handleAfterAngerNext}
+          onClick={handleNext}
           className="bg-white text-black rounded-full w-fit px-4 py-2 mt-4"
         >
           Devam Et
         </button>
       </motion.div>
-    );
-  }
-
-  if (showAngerLevel) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center gap-6"
-      >
-        <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
-          Bana ne kadar kızgınsın?
-        </h2>
-        <div className="flex items-center gap-4">
-          <input
-            type="range"
-            min="1"
-            max="10"
-            value={anger}
-            onChange={(e) => setAnger(Number(e.target.value))}
-            className="w-64 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-          />
-          <span className="text-xl font-bold text-white">{anger}</span>
-        </div>
-        {anger >= 6 && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="text-6xl"
-          >
-            😢
-          </motion.div>
-        )}
-        <button
-          onClick={handleAngerSubmit}
-          className="bg-white text-black rounded-full w-fit px-4 py-2 mt-4"
-        >
-          Devam Et
-        </button>
-      </motion.div>
-    );
-  }
-
-  if (showRelationshipQuestion) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center gap-6"
-      >
-        <h2 className="text-2xl md:text-4xl font-bold text-white text-center">
-        Her şeyden önce önemli bir soru konuştuğun biri var mı?
-        </h2>
-        <div className="flex gap-4">
-          <button
-            onClick={() => handleRelationshipAnswer('evet')}
-            className="bg-white text-black rounded-full px-4 py-2"
-          >
-            Evet
-          </button>
-          <button
-            onClick={() => handleRelationshipAnswer('hayır')}
-            className="bg-white text-black rounded-full px-4 py-2"
-          >
-            Hayır
-          </button>
-        </div>
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0.0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        delay: 0.3,
-        duration: 0.8,
-        ease: "easeInOut",
-      }}
-      className="relative flex flex-col gap-4 items-center justify-center px-4"
-    >
-      {step >= 2 && (
-        <div className="fixed top-4 right-4 z-50">
-          <MusicCard 
-            src="/hooverphonic.mp3"
-            title="Mad About You"
-            artist="Hooverphonic"
-            mainColor="#10b981"
-            autoPlay
-          />
-        </div>
-      )}
-      <div className="text-3xl md:text-7xl font-bold text-white text-center">
-        {messages[step]}
-      </div>
-      <button 
-        onClick={handleNext}
-        className="bg-white text-black rounded-full w-fit px-4 py-2 mt-4"
-      >
-        Devam Et
-      </button>
-    </motion.div>
+    </>
   );
 } 

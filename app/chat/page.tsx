@@ -108,7 +108,7 @@ export default function ChatPage() {
           title="Mad About You"
           artist="Hooverphonic"
           mainColor="#10b981"
-          autoPlay
+          autoPlay={true}
         />
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">

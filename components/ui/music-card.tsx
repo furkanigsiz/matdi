@@ -9,12 +9,10 @@ interface MusicCardProps {
   mainColor?: string;
   title?: string;
   artist?: string;
-  autoPlay?: boolean;
 }
 
-export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title', artist = 'Unknown Artist', autoPlay = false }: MusicCardProps){
-
-  const [isPlaying, setIsPlaying] = useState(autoPlay)
+export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title', artist = 'Unknown Artist' }: MusicCardProps){
+  const [isPlaying, setIsPlaying] = useState(true)
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
   const howler = useRef<Howl | null>(null)
@@ -22,7 +20,7 @@ export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title'
 
   useEffect(() => {
     if (howler.current) {
-      howler.current.stop()
+      howler.current.unload()
       clearInterval(progressInterval.current)
     }
 
@@ -48,18 +46,19 @@ export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title'
       },
       onload: () => {
         setDuration(sound.duration())
-        if (autoPlay) {
-          sound.play()
-        }
+        sound.play()
       }
     })
 
     howler.current = sound
 
     return () => {
+      if (howler.current) {
+        howler.current.unload()
+      }
       clearInterval(progressInterval.current)
     }
-  }, [src, autoPlay])
+  }, [src])
 
   const updateProgress = () => {
     if (!howler.current) return
@@ -72,8 +71,6 @@ export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title'
 
   const handlePlayPause = () => {
     if (!howler.current) return
-
-    setIsPlaying(!isPlaying)
 
     if (isPlaying) {
       howler.current.pause()
@@ -99,7 +96,7 @@ export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title'
     if (!howler.current) return
 
     const currentTime = howler.current.seek() as number
-    const skipAmount = 10 // 10 saniye
+    const skipAmount = 10
     const newTime = direction === 'forward'
       ? Math.min(currentTime + skipAmount, duration)
       : Math.max(currentTime - skipAmount, 0)
