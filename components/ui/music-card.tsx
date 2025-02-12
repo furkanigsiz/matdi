@@ -16,19 +16,23 @@ export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title'
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
   const howler = useRef<Howl | null>(null)
-  const progressInterval = useRef<NodeJS.Timer>()
+  const progressInterval = useRef<number | null>(null)
 
   useEffect(() => {
     if (howler.current) {
       howler.current.unload()
-      clearInterval(progressInterval.current)
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
+      }
     }
 
     const sound = new Howl({
       src,
       onpause: () => {
         setIsPlaying(false)
-        clearInterval(progressInterval.current)
+        if (progressInterval.current) {
+          clearInterval(progressInterval.current)
+        }
       },
       onplay: () => {
         setIsPlaying(true)
@@ -36,12 +40,16 @@ export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title'
       },
       onend: () => {
         setIsPlaying(false)
-        clearInterval(progressInterval.current)
+        if (progressInterval.current) {
+          clearInterval(progressInterval.current)
+        }
         setProgress(0)
       },
       onstop: () => {
         setIsPlaying(false)
-        clearInterval(progressInterval.current)
+        if (progressInterval.current) {
+          clearInterval(progressInterval.current)
+        }
         setProgress(0)
       },
       onload: () => {
@@ -56,14 +64,16 @@ export function MusicCard ({ src, mainColor = '#3b82f6', title = 'Unknown Title'
       if (howler.current) {
         howler.current.unload()
       }
-      clearInterval(progressInterval.current)
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
+      }
     }
   }, [src])
 
   const updateProgress = () => {
     if (!howler.current) return
 
-    progressInterval.current = setInterval(() => {
+    progressInterval.current = window.setInterval(() => {
       const seek = howler.current?.seek() || 0
       setProgress(seek)
     }, 1000)
