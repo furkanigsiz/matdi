@@ -10,9 +10,15 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+interface ChatMessage {
+  message: string;
+  user_id: string;
+  created_at: string;
+}
+
 export default function ChatPage() {
   const [chatMessage, setChatMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   // Chat mesajlarını dinle
@@ -25,7 +31,7 @@ export default function ChatPage() {
       
       if (data) {
         console.log('Gelen mesajlar:', data);
-        setChatMessages(data);
+        setChatMessages(data as ChatMessage[]);
       }
       if (error) {
         console.error('Mesaj çekme hatası:', error);
@@ -49,11 +55,11 @@ export default function ChatPage() {
           setChatMessages(prevMessages => {
             // Aynı mesajı tekrar eklemeyi önle
             const messageExists = prevMessages.some(msg => 
-              msg.message === payload.new.message && 
-              msg.created_at === payload.new.created_at
+              msg.message === (payload.new as ChatMessage).message && 
+              msg.created_at === (payload.new as ChatMessage).created_at
             );
             if (messageExists) return prevMessages;
-            return [...prevMessages, payload.new];
+            return [...prevMessages, payload.new as ChatMessage];
           });
         }
       )
@@ -108,7 +114,7 @@ export default function ChatPage() {
           title="Mad About You"
           artist="Hooverphonic"
           mainColor="#10b981"
-          autoPlay={true}
+
         />
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">

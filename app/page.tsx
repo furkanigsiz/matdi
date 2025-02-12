@@ -10,6 +10,12 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+interface ChatMessage {
+  message: string;
+  user_id: string;
+  created_at: string;
+}
+
 export default function Home() {
   const [step, setStep] = useState(0);
   const [anger, setAnger] = useState<number>(1);
@@ -22,8 +28,7 @@ export default function Home() {
   const [showCustomDate, setShowCustomDate] = useState(false);
   const [customDate, setCustomDate] = useState("");
   const [showChat, setShowChat] = useState(false);
-  const [chatMessage, setChatMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isComplete, setIsComplete] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -73,7 +78,7 @@ export default function Home() {
         
         if (data) {
           console.log('Gelen mesajlar:', data);
-          setChatMessages(data);
+          setChatMessages(data as ChatMessage[]);
         }
         if (error) {
           console.error('Mesaj çekme hatası:', error);
@@ -93,7 +98,7 @@ export default function Home() {
           }, 
           (payload) => {
             console.log('Yeni mesaj:', payload);
-            setChatMessages(current => [...current, payload.new]);
+            setChatMessages(current => [...current, payload.new as ChatMessage]);
           }
         )
         .subscribe((status) => {
@@ -112,24 +117,6 @@ export default function Home() {
       chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chatMessages]);
-
-  const handleSendMessage = async () => {
-    if (!chatMessage.trim()) return;
-
-    const { data, error } = await supabase
-      .from('chat_messages')
-      .insert([
-        {
-          message: chatMessage,
-          user_id: 'user',
-          created_at: new Date().toISOString()
-        }
-      ]);
-
-    if (!error) {
-      setChatMessage('');
-    }
-  };
 
   const handleCustomDateSubmit = async () => {
     if (!customDate.trim()) return;
