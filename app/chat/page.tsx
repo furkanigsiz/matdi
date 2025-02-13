@@ -24,16 +24,19 @@ export default function ChatPage() {
   // Chat mesajlarını dinle
   useEffect(() => {
     const fetchMessages = async () => {
-      const { data, error } = await supabase
-        .from('chat_messages')
-        .select('*')
-        .order('created_at', { ascending: true });
-      
-      if (data) {
-        console.log('Gelen mesajlar:', data);
-        setChatMessages(data as ChatMessage[]);
-      }
-      if (error) {
+      try {
+        const { data, error } = await supabase
+          .from('chat_messages')
+          .select('*')
+          .order('created_at', { ascending: true });
+        
+        if (error) throw error;
+        
+        if (data) {
+          console.log('Gelen mesajlar:', data);
+          setChatMessages(data as ChatMessage[]);
+        }
+      } catch (error) {
         console.error('Mesaj çekme hatası:', error);
       }
     };
@@ -42,28 +45,31 @@ export default function ChatPage() {
 
     // Realtime subscription
     const channel = supabase
-      .channel('public:chat_messages')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'chat_messages',
-        },
+      .channel('chat_messages_channel')
+      .on('postgres_changes', 
+        { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'chat_messages' 
+        }, 
         (payload) => {
-          console.log('Yeni mesaj geldi:', payload);
+          console.log('Yeni mesaj:', payload);
+          const newMessage = payload.new as ChatMessage;
           setChatMessages(prevMessages => {
             // Aynı mesajı tekrar eklemeyi önle
             const messageExists = prevMessages.some(msg => 
-              msg.message === (payload.new as ChatMessage).message && 
-              msg.created_at === (payload.new as ChatMessage).created_at
+              msg.message === newMessage.message && 
+              msg.created_at === newMessage.created_at
             );
             if (messageExists) return prevMessages;
-            return [...prevMessages, payload.new as ChatMessage];
+            return [...prevMessages, newMessage];
           });
         }
       )
-      .subscribe();
+      .subscribe((status, err) => {
+        console.log('Subscription status:', status);
+        if (err) console.error('Subscription error:', err);
+      });
 
     return () => {
       channel.unsubscribe();
