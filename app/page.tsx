@@ -145,13 +145,15 @@ export default function Home() {
   };
 
   const messages = [
-    "Selam Mathilda...",
+    "Selam mathilda...",
     "Her şeyden önce önemli bir soru - konuştuğun biri var mı?",
     "Yeniden ben evet",
     "Şuan bu şarkı gibi hissettiğini farkındayım",
     "Haklısında evet",
     "Neden bir yetişkin gibi yazmadım",
-    "Because i was afraid of losing you forever without laying a solid foundation, anyway...",
+    "Because i was afraid of losing you forever without laying a solid foundation anyway",
+    "Senelerdir aklımdan çıkmıyorsun, aylardır tek düşündüğüm sensin. Zihnimin her yerine kök saldın ve çıkmıyorsun. Artık uzaktan Instagram'ına ya da kapalı Twitter'ını açtın mı diye bakmakla yetinemiyorum.",
+    "Daha fazla uzatmadan",
   ];
 
   const afterAngerMessages = [
