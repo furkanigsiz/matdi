@@ -30,7 +30,6 @@ export default function Home() {
   const [showChat, setShowChat] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [isComplete, setIsComplete] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const [showRelationshipQuestion, setShowRelationshipQuestion] = useState(false);
   const [showContinueMessage, setShowContinueMessage] = useState(false);
