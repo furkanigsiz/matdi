@@ -6,8 +6,8 @@ import { ClientLayout } from "./client-layout";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Sevgilim için özel site",
-  description: "Sana özel hazırlanmış bir site",
+  title: "Mad About Mathilda",
+  description: "Mathilda...",
 };
 
 export default function RootLayout({

@@ -52,18 +52,23 @@ export default function Home() {
   );
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      audioRef.current = new Audio('/rain.mp3');
-      audioRef.current.volume = 0.3;
-      audioRef.current.loop = true;
-      audioRef.current.play();
-    }
+    const audio = new Audio('/rain.mp3');
+    audio.volume = 0.2; // Sesi biraz daha kısık yapıyorum
+    audio.loop = true;
+    
+    const playAudio = async () => {
+      try {
+        await audio.play();
+      } catch (error) {
+        console.error("Ses çalma hatası:", error);
+      }
+    };
+
+    playAudio();
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+      audio.pause();
+      audio.currentTime = 0;
     };
   }, []);
 
@@ -140,13 +145,13 @@ export default function Home() {
   };
 
   const messages = [
-    "Selam mathilda...",
+    "Selam Mathilda...",
     "Her şeyden önce önemli bir soru - konuştuğun biri var mı?",
     "Yeniden ben evet",
     "Şuan bu şarkı gibi hissettiğini farkındayım",
     "Haklısında evet",
     "Neden bir yetişkin gibi yazmadım",
-    "Because i was afraid of losing you forever without laying a solid foundation anyway",
+    "Because i was afraid of losing you forever without laying a solid foundation, anyway...",
   ];
 
   const afterAngerMessages = [
